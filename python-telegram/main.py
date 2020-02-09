@@ -1,15 +1,20 @@
 from telegram.ext import Updater, InlineQueryHandler
 from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters, CallbackContext
-from telegram import InlineQueryResultArticle, InputTextMessageContent
+import telegram
 import logging
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
 
+TOKEN = "969883313:AAHS141QmPgF3B8OwYri-F7xY7FlGuH5TN0"
+
+bot = telegram.Bot(token=TOKEN)
+print(bot.getMe())
+
 # TODO 01: hide the value of the token?
 updater = Updater(
-    token="969883313:AAHS141QmPgF3B8OwYri-F7xY7FlGuH5TN0", use_context=True)
+    token=TOKEN, use_context=True)
 j = updater.job_queue
 
 dispatcher = updater.dispatcher
