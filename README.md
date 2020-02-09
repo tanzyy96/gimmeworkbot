@@ -6,6 +6,9 @@ Target date of completion: 1 Mar 2020
 
 ## TODOS
 - [x] Try building tutorial bot
+- [ ] Set up Virtual Environment for project
+  - [x] Install packages
+  - [ ] Troubleshooting
 - [ ] Read wiki
   - [ ] Basic message and response
   - [ ] Saving data
