@@ -6,16 +6,16 @@ Target date of completion: 1 Mar 2020
 
 ## TODOS
 - [x] Try building tutorial bot
-- [ ] Set up Virtual Environment for project
+- [x] Set up Virtual Environment for project
   - [x] Install packages
-  - [ ] Troubleshooting
-- [ ] Read wiki
-  - [ ] Basic message and response
-  - [ ] Saving data
+  - [x] Troubleshooting
+- [ ] Read wiki and implement
+  - [x] Basic message and response
+  - [x] Saving data
   - [ ] Recalling data
   - [ ] Building tests...?
 - [ ] Planning bot design
-  - [ ] Bot Function #1
+  - [ ] Bot Function #1 -- Managing ToDos
   - [ ] Bot Function #2
 - [ ] Launching bot v1.0
 - [ ] Extending bot function
