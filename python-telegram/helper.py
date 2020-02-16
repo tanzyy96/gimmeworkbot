@@ -7,8 +7,10 @@ class Formatter:
     def print_formatted_list(bot_data):
         # receives bot_data which is a list of ToDoEntry
         # returns list as a formatted string for printing
-        string = "=== My List of ToDos ===\n"
-        for entry in bot_data:
-            todo = ToDoEntryManager.getToDoFromDict(entry)
+        string = "```\n=============== My List of ToDos ==============\n"
+        td_manager = ToDoEntryManager()
+        for name, deadline in bot_data.items():
+            td_manager.prepareToDo(name, deadline)
+            todo = td_manager.acceptToDo()
             string += todo.toString() + "\n"
-        return
+        return string + "\n```"

@@ -25,7 +25,9 @@ class ToDoEntry:
         return {self._title: self._deadline}
 
     def toString(self):
-        return "Name:{:8%s} |  {%s}".format(self._title, self._deadline)
+        if not self._deadline:
+            return "{:40}|  N.A.".format(self._title)
+        return "```{:40}|  {:20}```".format(self._title, self._deadline)
 
 
 class ToDoEntryManager:
@@ -33,7 +35,7 @@ class ToDoEntryManager:
     def __init__(self):
         self.queue = []
 
-    def createToDo(self, desc, deadline=None):
+    def prepareToDo(self, desc, deadline=None):
         new_todo = ToDoEntry(desc, deadline)
         self.queue.append(new_todo)
 
@@ -42,8 +44,3 @@ class ToDoEntryManager:
 
     def acceptToDo(self):
         return self.queue.pop(0)
-
-    @staticmethod
-    def getToDoFromDict(_dict):
-        # dict format {"name": "...", "deadline": "..."}
-        return ToDoEntry(_dict["name"], _dict["deadline"])
