@@ -1,8 +1,10 @@
-from telegram.ext import Updater, InlineQueryHandler
+from telegram.ext import Updater, InlineQueryHandler, CallbackQueryHandler
 from telegram.ext import CommandHandler
 from telegram.ext import MessageHandler, Filters, CallbackContext
 from telegram import InlineQueryResultArticle, InputTextMessageContent
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import logging
+from todo import ToDoEntry, ToDoEntryManager
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -13,39 +15,55 @@ updater = Updater(
 j = updater.job_queue
 
 dispatcher = updater.dispatcher
+todoManager = ToDoEntryManager()
+
+# /start for basic instructions
 
 
 def start(update, context):
     context.bot.send_message(
-        chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
+        chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!!")
+
+# /todo _desc_ for adding todo
+# TODO 03: add deadline
 
 
-# using MessageHandler
-def echo(update, context):
-    context.bot.send_message(
-        chat_id=update.effective_chat.id, text=update.message.text)
-
-
-# using command arguments
-def caps(update, context):
-    text_caps = ''.join(context.args).upper()
-    context.bot.send_message(chat_id=update.effective_chat.id, text=text_caps)
-
-
-# takes your inline input and return its capitilized form
-def inline_caps(update, context):
-    query = update.inline_query.query
-    if not query:
+def todo(update, context):
+    if not context.args:
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text="Please add your todo description after using /todo.")
         return
-    results = list()
-    results.append(
-        InlineQueryResultArticle(
-            id=query.upper(),
-            title='Caps',
-            input_message_content=InputTextMessageContent(query.upper())
-        )
-    )
-    context.bot.answer_inline_query(update.inline_query.id, results)
+    todo_name = context.args[0]
+
+    keyboard = [[InlineKeyboardButton("Yes", callback_data='YES'),
+                 InlineKeyboardButton("No", callback_data='NO')]]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text(
+        'Confirm to add the above todo?', reply_markup=reply_markup)
+
+    todoManager.createToDo(todo_name)
+
+# callback for confirmation of adding todo
+
+
+def todo_confirmation(update, context):
+    query = update.callback_query
+    # TODO 02: save todo here
+
+    if (query.data == "YES"):
+        dispatcher.bot_data.update(todoManager.acceptToDo().toDict())
+        query.edit_message_text("Your to-do item has been added.")
+        print(dispatcher.bot_data)
+    else:
+        todoManager.rejectToDo()
+        query.edit_message_text(
+            "Rejected to-do item. Please enter again through the /todo command.")
+
+
+def print_list(update, context):
+    context.bot.send_message(chat_id=update.effective_chat.id,
+                             text="")
 
 
 def unknown(update, context):
@@ -53,25 +71,17 @@ def unknown(update, context):
                              text="Sorry, I didn't understand that command.")
 
 
-def callback_minute(context: CallbackContext):
-    context.bot.send_message(chat_id='366058116',
-                             text='One message every minute')
-
+# ========================================== HANDLERS ================================================ #
 
 start_handler = CommandHandler('start', start)
-caps_handler = CommandHandler('caps', caps)
-echo_handler = MessageHandler(Filters.text, echo)
-inline_caps_handler = InlineQueryHandler(inline_caps)
-unknown_handler = MessageHandler(Filters.command, unknown)
+todo_handler = CommandHandler('todo', todo)
+list_handler = CommandHandler('list', print_list)
+todo_confirmation_handler = CallbackQueryHandler(todo_confirmation)
 
 dispatcher.add_handler(start_handler)
-dispatcher.add_handler(caps_handler)
-dispatcher.add_handler(echo_handler)
-dispatcher.add_handler(inline_caps_handler)
-# must be added last, else all commands will trigger this handler
-dispatcher.add_handler(unknown_handler)
-
-job_minute = j.run_repeating(callback_minute, interval=60, first=0)
+dispatcher.add_handler(todo_handler)
+dispatcher.add_handler(todo_confirmation_handler)
+# TODO 04: Add error handler
 
 updater.start_polling()
 print("Bot running...")
