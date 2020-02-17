@@ -15,7 +15,7 @@ class ToDoEntry:
 
     @property
     def deadline(self):
-        return self._title
+        return self._deadline
 
     @deadline.setter
     def deadline(self, deadline):
@@ -38,6 +38,9 @@ class ToDoEntryManager:
     def prepareToDo(self, desc, deadline=None):
         new_todo = ToDoEntry(desc, deadline)
         self.queue.append(new_todo)
+
+    def changeDeadline(self, deadline):
+        self.queue[0].deadline = deadline
 
     def rejectToDo(self):
         self.queue.pop(0)

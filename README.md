@@ -35,6 +35,7 @@ A few main functions will be required here:
 - [ ] Add todo
   - [x] /todo to add
   - [ ] add deadline (doing)
+  - [ ] remove calendar dates before today (or ignore)
 - [x] Check todos
   - [x] /list to check
 - [ ] Edit todos
@@ -42,3 +43,9 @@ A few main functions will be required here:
 - [ ] Reminder on deadlines
 - [ ] Priorities on todos (we can do color!)
 - [ ] Sort todos (we can use context.args on /list here)
+
+## Continue off from here
+
+Basic add todo function working. Need to implement setting deadline function as deadline does not show correctly.
+
+Also can look into ConversationHandler to improve the design of our code. Look into building a HelpBot class or something.
