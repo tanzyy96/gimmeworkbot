@@ -32,13 +32,16 @@ A few main functions will be required here:
 - [ ] General description
   - [ ] /start
   - [ ] /help
-- [ ] Add todo
+- [x] Add todo
   - [x] /todo to add
-  - [ ] add deadline (doing)
-  - [ ] remove calendar dates before today (or ignore)
+  - [x] add deadline
+  - [x] remove calendar dates before today (or ignore)
 - [x] Check todos
   - [x] /list to check
 - [ ] Edit todos
+  - [ ] Command helper /edit
+  - [ ] Enter new todo -> enter new deadline
+  - [ ] Confirm callback
 - [ ] Delete todo
 - [ ] Reminder on deadlines
 - [ ] Priorities on todos (we can do color!)
@@ -46,6 +49,6 @@ A few main functions will be required here:
 
 ## Continue off from here
 
-Basic add todo function working. Need to implement setting deadline function as deadline does not show correctly.
+Next up, we want to allow editing of todos. Might have to implement /edit todo washing, or something like that.
 
-Also can look into ConversationHandler to improve the design of our code. Look into building a HelpBot class or something.
+Can actually route it to call existing command helpers for reuse.

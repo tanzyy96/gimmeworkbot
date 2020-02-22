@@ -5,6 +5,7 @@
 #
 """
 Base methods for calendar keyboard creation and processing.
+Configured for this telegram bot.
 """
 
 
@@ -31,6 +32,7 @@ def create_calendar(year=None, month=None):
     :return: Returns the InlineKeyboardMarkup object with the calendar.
     """
     now = datetime.datetime.now()
+    today = datetime.date.today()
     if year == None:
         year = now.year
     if month == None:
@@ -50,20 +52,30 @@ def create_calendar(year=None, month=None):
     keyboard.append(row)
 
     my_calendar = calendar.monthcalendar(year, month)
-    for week in my_calendar:
-        row = []
-        for day in week:
-            if(day == 0):
+    if month < today.month:
+        for week in my_calendar:
+            for day in week:
                 row.append(InlineKeyboardButton(
                     " ", callback_data=data_ignore))
-            else:
-                row.append(InlineKeyboardButton(
-                    str(day), callback_data=create_callback_data("DAY", year, month, day)))
-        keyboard.append(row)
+    else:
+        for week in my_calendar:
+            row = []
+            for day in week:
+                if(day == 0) or (day < today.day and month == today.month):
+                    row.append(InlineKeyboardButton(
+                        " ", callback_data=data_ignore))
+                else:
+                    row.append(InlineKeyboardButton(
+                        str(day), callback_data=create_callback_data("DAY", year, month, day)))
+            keyboard.append(row)
     # Last row - Buttons
     row = []
-    row.append(InlineKeyboardButton(
-        "<", callback_data=create_callback_data("PREV-MONTH", year, month, day)))
+    if month == today.month:
+        row.append(InlineKeyboardButton(
+            "x", callback_data=data_ignore))
+    else:
+        row.append(InlineKeyboardButton(
+            "<", callback_data=create_callback_data("PREV-MONTH", year, month, day)))
     row.append(InlineKeyboardButton("END", callback_data=end))
     row.append(InlineKeyboardButton(
         ">", callback_data=create_callback_data("NEXT-MONTH", year, month, day)))
@@ -109,6 +121,7 @@ def process_calendar_selection(bot, update):
         bot.edit_message_text(text="No deadline selected.",
                               chat_id=query.message.chat_id,
                               message_id=query.message.message_id)
+        ret_data = True, None
     else:
         bot.answer_callback_query(
             callback_query_id=query.id, text="Something went wrong!")

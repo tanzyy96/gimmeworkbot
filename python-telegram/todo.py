@@ -26,8 +26,8 @@ class ToDoEntry:
 
     def toString(self):
         if not self._deadline:
-            return "{:40}|  N.A.".format(self._title)
-        return "```{:40}|  {:20}```".format(self._title, self._deadline)
+            return "{:30}|  N.A.".format(self._title)
+        return "{:30}|  {:20}".format(self._title, self._deadline.strftime("%d-%b-%Y"))
 
 
 class ToDoEntryManager:
