@@ -49,6 +49,6 @@ A few main functions will be required here:
 
 ## Continue off from here
 
-Next up, we want to allow editing of todos. Might have to implement /edit todo washing, or something like that.
+Next up, we want to allow editing of todos. We will continue using /todo, but check against existing todos names instead.
 
-Can actually route it to call existing command helpers for reuse.
+Currently completed until point inline keyboard for edit desc and edit deadline :D

@@ -5,6 +5,7 @@ import logging
 from todo import ToDoEntry, ToDoEntryManager
 from helper import Formatter
 import telegramcalendar
+import keyboard
 
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -30,14 +31,22 @@ class GimmeWorkBot:
     def command_todo(self, update, context):  # /todo _desc_ for adding todo
         if not context.args:
             context.bot.send_message(chat_id=update.effective_chat.id,
-                                     text="Please add your todo description after using /todo.")
+                                     text="Syntax: /todo insertTodoNameHere")
             return
 
         todo_name = context.args[0]
-        self.todoManager.prepareToDo(todo_name)
+        if not self.todoManager.checkUniqueTodoName(self.dispatcher.bot_data, todo_name):
+            # edit todo
+            context.bot.send_message(chat_id=update.effective_chat.id,
+                                     text="Editing todo: {}".format(todo_name), reply_markup=keyboard.editTodoKeyboard())
+        else:
+            # add new todo
+            self.todoManager.prepareToDo(todo_name)
 
-        update.message.reply_text("Click END if you don't want to add a deadline!",
-                                  reply_markup=telegramcalendar.create_calendar())
+            update.message.reply_text("Click END if you don't want to add a deadline!",
+                                      reply_markup=telegramcalendar.create_calendar())
+
+    # def command_todo_edit_callback(self, update, context):
 
     def command_todo_calendar_callback(self, update, context):
         query = update.callback_query

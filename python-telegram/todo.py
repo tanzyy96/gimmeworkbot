@@ -1,3 +1,8 @@
+"""
+Todo class
+Saved in bot_data as a dictionary in the form {title: deadline}
+"""
+
 
 class ToDoEntry:
 
@@ -38,6 +43,12 @@ class ToDoEntryManager:
     def prepareToDo(self, desc, deadline=None):
         new_todo = ToDoEntry(desc, deadline)
         self.queue.append(new_todo)
+
+    def checkUniqueTodoName(self, bot_data, todo):
+        for todo_name in bot_data.keys():
+            if todo_name == todo:
+                return False
+        return True
 
     def changeDeadline(self, deadline):
         self.queue[0].deadline = deadline
